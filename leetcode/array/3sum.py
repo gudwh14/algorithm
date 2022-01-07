@@ -1,6 +1,7 @@
 from typing import List
 
 
+# 투포인터를 사용해서 풀어야함
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
         result = []
@@ -22,10 +23,10 @@ class Solution:
                 # 세수의 합이 0이면 결과 저장 및 포인터 이동
                 if sum == 0:
                     result.append([nums[i], nums[left], nums[right]])
-                    # 다음 포인터 값이 현재 포인터 값이랑 같을경우 포인터 이동
+                    # 다음 포인터 값이 현재 포인터 값이랑 같을경우 포인터 이동, 중복 결과값 방지
                     while left < right and nums[left] == nums[left + 1]:
                         left += 1
-                    # 다음 포인터 값이 현재 포인터 값이랑 같을경우 포인터 이동
+                    # 다음 포인터 값이 현재 포인터 값이랑 같을경우 포인터 이동, 중복 결과값 방지
                     while left < right and nums[right] == nums[right - 1]:
                         right -= 1
                     left += 1
