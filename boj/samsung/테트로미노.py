@@ -3,7 +3,8 @@ import sys
 def solution(n, m, board):
     answer = []
 
-    # 모든 좌표에서 BFS 탐색
+    # 회전, 대칭시켜 나올수 있는 모든 테트로미노를 모든 좌표마다 한개씩 놓아 최대값 구하기!
+    # 총 19개의 모형이 나온다
     for i in range(n):
         for j in range(m):
             try:
