@@ -20,19 +20,19 @@ def solution(n, a, op):
             _op_count[0] += 1
             dfs(prev + a[depth + 1], depth + 1, _op_count)
 
-        # + 연산자를 더 사용할수있으면 +연산 진행
+        # - 연산자를 더 사용할수있으면 -연산 진행
         if op_count[1] < op[1]:
             _op_count = copy.deepcopy(op_count)
             _op_count[1] += 1
             dfs(prev - a[depth + 1], depth + 1, _op_count)
 
-        # + 연산자를 더 사용할수있으면 +연산 진행
+        # * 연산자를 더 사용할수있으면 *연산 진행
         if op_count[2] < op[2]:
             _op_count = copy.deepcopy(op_count)
             _op_count[2] += 1
             dfs(prev * a[depth + 1], depth + 1, _op_count)
 
-        # + 연산자를 더 사용할수있으면 +연산 진행
+        # / 연산자를 더 사용할수있으면 /연산 진행
         if op_count[3] < op[3]:
             _op_count = copy.deepcopy(op_count)
             _op_count[3] += 1
