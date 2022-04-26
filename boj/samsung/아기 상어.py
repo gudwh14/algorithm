@@ -1,51 +1,38 @@
 import collections
 
 
-def print_board(board):
-    for bo in board:
-        print(bo)
-    print()
-
-# 초기 상어 위치와, 물고기들의 위치를 구하는 함수
+# 초기 상어의 위치를 구하고 해당칸 초기화 하기
 def calc_location(N, board):
-    shark = ()
-    fish = []
-
     for i in range(N):
         for j in range(N):
-            if board[i][j] > 0:
-                if board[i][j] == 9:
-                    shark = (i, j)
-                else:
-                    fish.append((i, j, board[i][j]))
-
-    return shark, fish
+            if board[i][j] == 9:
+                shark = (i, j)
+                board[i][j] = 0
+                return shark
 
 
-# 상어가 먹을수 있는 물고기들을 구하는 함수
-def find_eat_fish(shark_size, fish):
-    find = []
-    for i, j, size in fish:
-        if shark_size > size:
-            find.append((i, j, size))
-
-    return find
-
-
-# 상어가 해당 물고기 칸으로 이동할 때 이동한 칸의 개수
-def move_shark(N, board, shark_size, shark, dest):
-    result = float('+inf')
+# 상어가 한칸씩 이동하여 먹을수 있는 최단거리의 물고기들 찾기
+def move_shark(board, shark_size, shark):
     i, j = shark
     Q = collections.deque()
     Q.append((i, j, 0))
-    directions = [(-1, 0), (0, 1), (0, -1), (1, 0)]
+    directions = [(-1, 0), (0, -1), (0, 1), (1, 0)]
     visit = [[False] * N for _ in range(N)]
     visit[i][j] = True
+    min_distance = float('+inf')
+    fishes = []
 
     while Q:
         ni, nj, distance = Q.popleft()
-        if (ni, nj) == dest:
-            result = min(result, distance)
+
+        if 0 < board[ni][nj] < shark_size and min_distance == float('+inf'):
+            min_distance = distance
+
+        if 0 < board[ni][nj] < shark_size and min_distance == distance:
+            fishes.append((ni, nj, distance))
+            continue
+
+        if min_distance != float('+inf') and distance > min_distance:
             continue
 
         for direct in directions:
@@ -56,67 +43,37 @@ def move_shark(N, board, shark_size, shark, dest):
                 if board[next_i][next_j] <= shark_size:
                     Q.append((next_i, next_j, distance + 1))
                     visit[next_i][next_j] = True
-    return result
 
-
-# 상어가 해당 물고기를 먹는 함수
-def eat_fish(board, dest, fish):
-    global shark_size, shark, eat_count
-    board[shark[0]][shark[1]] = 0
-    ti, tj, size = dest
-    board[ti][tj] = 0
-    shark = (ti, tj)
-
-    eat_count += 1
-    fish.remove(dest)
-    if eat_count >= shark_size:
-        eat_count = 0
-        shark_size += 1
+    return fishes
 
 
 def solution(N, board):
     answer = 0
-    global shark
-    shark, fish = calc_location(N, board)
+    shark_size = 2
+    eat_count = 0
+    shark = calc_location(N, board)
 
     while True:
-        find = find_eat_fish(shark_size, fish)
+        # 최단 거리 물고기 찾기
+        fishes = move_shark(board, shark_size, shark)
         # 먹을수 있는 물고기가 없으면 종료
-        if not find:
+        if not fishes:
             break
-
-        # 먹을수 있는 물고기가 1개이면 해당 물고기 먹으러가기
-        if len(find) == 1:
-            ti, tj = find[0][0], find[0][1]
-            # 거리 구하기
-            distance = move_shark(N, board, shark_size, shark, (ti, tj))
-            # inf 이면 닿을수 없는 곳
-            if distance == float('+inf'):
-                break
-            answer += distance
-            eat_fish(board, find[0], fish)
-        else:
-            distances = []
-            # 물고기들의 거리를 계산하여 저장
-            for dest in find:
-                ti, tj, size = dest[0], dest[1], dest[2]
-                distance = move_shark(N, board, shark_size, shark, (ti, tj))
-                distances.append([ti, tj, size, distance])
-
-            # 거리가 짧은순, 좌표값 위쪽, 왼쪽 순으로 정렬
-            distances.sort(key=lambda x: (x[3], x[0], x[1]))
-            # 거리가 inf 이면 닿을수 없는곳
-            if distances[0][3] == float('+inf'):
-                break
-            answer += distances[0][3]
-            eat_fish(board, (distances[0][0], distances[0][1], distances[0][2]), fish)
+        # 물고기 정렬
+        fishes.sort(key=lambda x: (x[2], x[0], x[1]))
+        # 물고기 먹기
+        f_r, f_c, distance = fishes[0]
+        eat_count += 1
+        if eat_count >= shark_size:
+            eat_count = 0
+            shark_size += 1
+        shark = (f_r, f_c)
+        answer += distance
+        board[f_r][f_c] = 0
     return answer
 
 
 N = int(input().split()[0])
 board = [list(map(int, input().split())) for _ in range(N)]
 
-shark = None
-shark_size = 2
-eat_count = 0
 print(solution(N, board))

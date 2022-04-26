@@ -56,7 +56,7 @@ def solution(n, m, board):
     chickens = find_chicken(n, board)
 
     for i in range(1, m + 1):
-        # 조합을 이용하여, 치킨집을 1 ~ 3개까지 뽑는다.
+        # 조합을 이용하여, 치킨집을 1 ~ m개까지 뽑는다.
         combinations = []
         combination(combinations, [], 0, i, len(chickens))
 
