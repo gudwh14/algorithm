@@ -1,32 +1,4 @@
-def print_board(board):
-    for bo in board:
-        print(bo)
-    print()
-
-
-def compare(x, y):
-    x_i, x_j, x_count, x_empty = x
-    y_i, y_j, y_count, y_empty = y
-
-    if x_count > y_count:
-        return 1
-    elif x_count == y_count:
-        if x_empty > y_empty:
-            return 1
-        elif x_empty == y_empty:
-            if x_i > y_i:
-                return -1
-            elif x_i == y_i:
-                if x_j > y_j:
-                    return -1
-            else:
-                return 1
-        else:
-            return -1
-    else:
-        return -1
-
-
+# 학생 자리에 앉히기
 def set_sit(N, board, student, likes):
     find = []
     directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
@@ -36,8 +8,12 @@ def set_sit(N, board, student, likes):
     for i in range(N):
         for j in range(N):
             if board[i][j] == 0:
+                # 해당 칸에 인접한 칸중 좋아하는 학생이 좋아하는 수
                 count = 0
+                # 해당 칸에 인접한 칸중 비어있는 칸의 개수
                 empty = 0
+
+                # 인접한 칸 조사
                 for direct in directions:
                     ni = i + direct[0]
                     nj = j + direct[1]
@@ -48,6 +24,7 @@ def set_sit(N, board, student, likes):
                         elif board[ni][nj] == 0:
                             empty += 1
 
+                # 학생이 앉을 칸 업데이트
                 if count > max_count:
                     find = [i, j]
                     max_count = count

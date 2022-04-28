@@ -84,7 +84,7 @@ def find_big_ice(A, N):
 
     for i in range(n):
         for j in range(n):
-            if A[i][j] > 0:
+            if A[i][j] > 0 and not visit[i][j]:
                 result = max(result, bfs(i, j))
 
     return result

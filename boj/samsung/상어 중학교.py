@@ -9,6 +9,8 @@ def print_board(board):
 
 # 가장큰 블럭 그룹 찾기
 def find_group(N, board):
+    rainbows = []
+
     def bfs(i, j):
         directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         group = []
@@ -33,6 +35,7 @@ def find_group(N, board):
                     visit[nr][nc] = True
                     # 무지개색 블럭 개수 카운팅
                     if board[nr][nc] == 0:
+                        rainbows.append((nr, nc))
                         rain_bow += 1
         # 그룹에 해당하는 블럭이 2개 이상일때만 그룹 인정
         if len(group) > 1:
@@ -46,11 +49,8 @@ def find_group(N, board):
                 bfs(i, j)
                 # 무지개색 블럭 방문 배열 초기화
                 # 공통으로 사용 할 수 있기 때문에
-                # 시간을 줄이려면 각 탐색마다 무지개색을 사용한 좌표를 저장하여 해당 좌표만 초기화 해주기
-                for _i in range(N):
-                    for _j in range(N):
-                        if board[_i][_j] == 0:
-                            visit[_i][_j] = False
+                for r, c in rainbows:
+                    visit[r][c] = False
 
     # 그룹의 블럭 개수, 무지개색 블럭 개수, 행, 열 순으로 정렬
     groups.sort(key=lambda x: (x[2], x[3], x[0], x[1]))
