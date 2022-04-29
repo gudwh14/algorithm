@@ -24,6 +24,7 @@ def calc_value(shark, value):
     r, c = shark
     val = 1
 
+    # 격자의 중심부 부터 좌,하,우,상 방향으로 방향이 변경하면서 칸의 길이가 늘어남
     while True:
         for i in range(1, idx + 1):
             r = r + directions[direct][0]
@@ -45,6 +46,8 @@ def move_ball(value, board):
     empty_start = None
     empty_count = 0
     is_move = False
+
+    # 칸의 값이 1부터 N ** 2 - 1 까지 반복
     for val, coordinate in value.items():
         r, c = coordinate
         if board[r][c] == 0 and not empty_start:
@@ -125,22 +128,32 @@ def change_ball(value, board):
 
 
 def solution(N, M, board, infos):
+    # 마법사 상어의 위치
     shark = (N // 2, N // 2)
+    # 격자의 칸마다 적히는 수 구하기
     value = {}
     calc_value(shark, value)
+    # 구슬이 파괴된 개수
     answer_count = [0, 0, 0]
 
     for i in range(M):
+        # 블리자드 마법 시전
         blizzard(infos[i], shark, board)
+        # 구슬 이동
         move_ball(value, board)
+
+        # 구슬이 더이상 터지지 않을때 까지 터트리기
         while True:
             is_bomb = bomb_ball(value, board, answer_count)
+            # 구슬이 더이상 움직이지 않을때 까지 움직이기
             while True:
                 is_move = move_ball(value, board)
                 if not is_move:
                     break
             if not is_bomb:
                 break
+
+        # 구슬 변환
         change_ball(value, board)
     return answer_count[0] + 2 * answer_count[1] + 3 * answer_count[2]
 
