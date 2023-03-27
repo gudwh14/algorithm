@@ -3,9 +3,9 @@ def solution(N, infos):
     edge = 0
     parent = {}
     infos.sort(key=lambda x: x[2])
-    for vertex in (1, N + 1):
+    for vertex in range(1, N + 1):
         parent[vertex] = vertex
-
+    print(parent)
     def find_parent(x):
         if x != parent[x]:
             parent[x] = find_parent(parent[x])
@@ -30,7 +30,7 @@ def solution(N, infos):
         if union(u, v):
             answer += w
             edge += 1
-
+    print(parent)
     return answer
 
 

@@ -41,3 +41,9 @@
 .vscode
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
+
+# 기출 문제
+/sk
+/bucketplace
+/kakao mobility
+/line
